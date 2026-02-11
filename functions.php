@@ -2013,11 +2013,12 @@ function translate_password_strength($translated, $text, $domain)
     }
 
     return $translated;
-} 
+}
 // functions.php me add karo
 add_filter('login_errors', 'custom_translate_login_errors_lt');
 
-function custom_translate_login_errors_lt($errors) {
+function custom_translate_login_errors_lt($errors)
+{
 
     // Original error messages aur Lithuanian translation
     $translations = array(
@@ -2040,4 +2041,263 @@ function custom_translate_login_errors_lt($errors) {
     }
 
     return $errors;
+}
+add_filter('gettext', 'translate_myaccount_address_lithuanian', 20, 3);
+function translate_myaccount_address_lithuanian($translated_text, $text, $domain)
+{
+
+    if ($domain == 'woocommerce') {
+
+        $translations = array(
+
+            // Address Tab Headings
+            'Addresses' => 'Adresai',
+            'Billing address' => 'Sąskaitos duomenys',
+            'Shipping address' => 'Pristatymo adresas',
+
+            // Buttons
+            'Edit' => 'Redaguoti',
+            'Add' => 'Pridėti',
+            'Save address' => 'Išsaugoti adresą',
+
+            // Empty address messages
+            'You have not set up this type of address yet.' =>
+                'Jūs dar nesate nustatę šio adreso.',
+
+            // Fields
+            'First name' => 'Vardas',
+            'Last name' => 'Pavardė',
+            'Company name' => 'Įmonės pavadinimas',
+            'Country / Region' => 'Šalis / Regionas',
+            'Street address' => 'Gatvės adresas',
+            'Town / City' => 'Miestas',
+            'State / County' => 'Apskritis',
+            'Postcode / ZIP' => 'Pašto kodas',
+            'Phone' => 'Telefonas',
+            'Email address' => 'El. paštas',
+
+            // Notices
+            'Address changed successfully.' =>
+                'Adresas sėkmingai pakeistas.',
+
+            'The following addresses will be used on the checkout page by default.' =>
+                'Pasirinkti adresai bus naudojami atsiskaityme'
+        );
+
+        if (isset($translations[$text])) {
+            $translated_text = $translations[$text];
+        }
+    }
+
+    return $translated_text;
+}
+add_filter('gettext', 'translate_add_to_cart_notices_lt', 20, 3);
+function translate_add_to_cart_notices_lt($translated_text, $text, $domain)
+{
+
+    if ($domain == 'woocommerce') {
+
+        $translations = array(
+
+            // Add to cart notice
+            'has been added to your cart.' =>
+                'buvo pridėtas į jūsų krepšelį.',
+
+            'View cart' => 'Peržiūrėti krepšelį',
+
+            'Continue shopping' => 'Tęsti apsipirkimą',
+
+            'Product added to cart' =>
+                'Produktas pridėtas į krepšelį',
+
+            'has been removed from your cart.' =>
+                'buvo pašalintas iš jūsų krepšelio.',
+
+            'Cart updated.' =>
+                'Krepšelis atnaujintas.',
+
+            'Undo?' =>
+                'Atšaukti?',
+
+            'Your cart is currently empty.' =>
+                'Jūsų krepšelis tuščias.'
+        );
+
+        if (isset($translations[$text])) {
+            $translated_text = $translations[$text];
+        }
+    }
+
+    return $translated_text;
+}
+add_action('wp_footer', 'translate_add_to_cart_js_lt');
+
+function translate_add_to_cart_js_lt()
+{
+    ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            function translateNotice() {
+
+                document.querySelectorAll('body *').forEach(function (el) {
+
+                    if (el.childNodes.length === 1 && el.innerHTML.includes('has been added to your cart')) {
+
+                        el.innerHTML = el.innerHTML.replace(
+                            'has been added to your cart',
+                            'buvo pridėtas į jūsų krepšelį'
+                        );
+
+                    }
+
+                });
+
+            }
+
+            // Pehli dafa page load pe
+            translateNotice();
+
+            // AJAX ke baad bhi
+            var observer = new MutationObserver(function (mutations) {
+                translateNotice();
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'fix_removed_text_js_lt');
+
+function fix_removed_text_js_lt()
+{
+    ?>
+    <script>
+        function fixRemovedText() {
+
+            document.querySelectorAll('body *').forEach(function (el) {
+
+                if (el.innerHTML.includes('removed.')) {
+                    el.innerHTML = el.innerHTML.replace('removed.', 'pašalintas.');
+                }
+
+                if (el.innerHTML.includes(' removed')) {
+                    el.innerHTML = el.innerHTML.replace(' removed', ' pašalintas');
+                }
+
+            });
+
+        }
+
+        // page load
+        fixRemovedText();
+
+        // ajax changes
+        new MutationObserver(fixRemovedText).observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    </script>
+    <?php
+}
+add_filter('the_title', 'limit_product_title_everywhere', 10, 2);
+
+function limit_product_title_everywhere($title, $id)
+{
+
+    // Sirf products ke liye
+    if (get_post_type($id) !== 'product') {
+        return $title;
+    }
+
+    // Single product page pe full title show ho
+    if (is_product()) {
+        return $title;
+    }
+
+    // Yahan aap length set karo
+    $max_length = 20;
+
+    if (strlen($title) > $max_length) {
+        return mb_substr($title, 0, $max_length) . '...';
+    }
+
+    return $title;
+}
+add_filter('gettext', 'translate_checkout_errors_lt', 20, 3);
+function translate_checkout_errors_lt($translated_text, $text, $domain)
+{
+
+    if ($domain == 'woocommerce') {
+
+        $translations = array(
+
+            // Required fields
+            'Billing First name is a required field.' =>
+                'Vardas yra privalomas laukelis.',
+
+            'Billing Last name is a required field.' =>
+                'Pavardė yra privalomas laukelis.',
+
+            'Billing Street address is a required field.' =>
+                'Gatvės adresas yra privalomas.',
+
+            'Billing Town / City is a required field.' =>
+                'Miestas yra privalomas.',
+
+            'Billing Phone is a required field.' =>
+                'Telefonas yra privalomas.',
+
+            'Billing Email address is a required field.' =>
+                'El. paštas yra privalomas.',
+
+            // Email
+            'Invalid billing email address' =>
+                'Neteisingas el. pašto adresas.',
+
+            // Terms
+            'Please read and accept the terms and conditions to proceed with your order.' =>
+                'Prašome perskaityti ir sutikti su taisyklėmis norint tęsti užsakymą.',
+
+            // Payment
+            'Please select a payment method.' =>
+                'Prašome pasirinkti mokėjimo būdą.',
+
+            'There are no payment methods available.' =>
+                'Nėra galimų mokėjimo būdų.',
+
+            // General checkout
+            'Please enter an address to continue.' =>
+                'Įveskite adresą norėdami tęsti.',
+
+            'Please enter a valid phone number.' =>
+                'Įveskite teisingą telefono numerį.',
+
+            'Please enter a valid postcode.' =>
+                'Įveskite teisingą pašto kodą.',
+
+            // Account
+            'An account is already registered with your email address.' =>
+                'Su šiuo el. paštu jau yra registruota paskyra.',
+
+            'Please log in.' =>
+                'Prašome prisijungti.',
+
+            // Order
+            'Error processing checkout. Please try again.' =>
+                'Klaida vykdant užsakymą. Bandykite dar kartą.'
+        );
+
+        if (isset($translations[$text])) {
+            $translated_text = $translations[$text];
+        }
+
+    }
+
+    return $translated_text;
 }

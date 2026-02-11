@@ -505,8 +505,8 @@ get_header();
 
 <section class="section-padding home_page_populer_product popular-products position-relative">
     <!-- <div class="d-block  mobile-nav">
-        <?php get_template_part('partials/swiper-navigation') ?>
-    </div> -->
+            <?php get_template_part('partials/swiper-navigation') ?>
+        </div> -->
     <div class="row max-width">
         <div
             class="col col-12 d-flex justify-content-center justify-content-sm-between align-items-center hassanAdjutsIconWidth">
@@ -568,34 +568,110 @@ $size = 'full';
 </section>
 
 
-<section class="section-padding home_page_populer_product popular-products section position-relative">
-
+<section class="section-padding category-products">
     <div class="row max-width">
-        <div
-            class="col col-12 d-flex justify-content-center justify-content-sm-between align-items-center hassanAdjutsIconWidth">
-            <div>
-                <h2 class="sub-heading"><?php _e('Išpardavimas'); ?></h2>
-                <p>Iki -50% nuolaida mėgstamiausioms prekėms</p>
-            </div>
-            <div class="d-block mobile-nav mobile_none">
-                <a href="#">Naršyti išpardavimą <span><img
-                            src="https://bisque-fly-315242.hostingersite.com/wp-content/uploads/2026/01/Vector-1.svg"
-                            alt="right-arrow-icon" width="5" class="srcolling-right-arrow-icon"></span></a>
-            </div>
-        </div>
-    </div>
-    <div class="row max-width">
-        <div class="col col-12">
-            <div class="mt-5 my-lg-5">
-                <?php getSliderProducts('popular'); ?>
-                <?php get_template_part('partials/swiper-navigation') ?>
-                <div class="d-block mobile-nav desktop_none">
-                    <a href="#">Naršyti išpardavimą <span><img
+        <div class="col-12">
+            <div class="hassanSwiperOneContentContainer">
+                <div>
+                    <h2 class="mb-2 sub-heading text-center text-sm-start">
+                        <?php echo esc_html('Išpardavimas'); ?>
+                    </h2>
+                    <h3 class="h3-heading text-center text-sm-start">
+                        <?php echo esc_html('Iki -50% nuolaida mėgstamiausioms prekėms'); ?>
+                    </h3>
+                </div>
+                <div class="hassanAdjutsIconWidth d-block mobile-nav mobile_none">
+                    <a href="#">Naršyti visus produktus <span><img
                                 src="https://bisque-fly-315242.hostingersite.com/wp-content/uploads/2026/01/Vector-1.svg"
                                 alt="right-arrow-icon" width="5" class="srcolling-right-arrow-icon"></span></a>
                 </div>
             </div>
+            <div class="mt-5 my-lg-5">
+                <div class="row hassanSwiperOneRow">
+                    <?php
+                    $product_ids = array(312264, 312265, 312263, 312285, 312289);
 
+                    $args = array(
+                        'post_type' => 'product',
+                        'post__in' => $product_ids,
+                        'posts_per_page' => -1,
+                        'orderby' => 'post__in',
+                    );
+
+                    $products = get_posts($args);
+                    ?>
+
+                    <?php if (!empty($products)): ?>
+                        <!-- Swiper -->
+                        <div class="swiper hassanSwiperOne ">
+                            <div class="swiper-wrapper hassanSwiperOneContainer">
+                                <?php foreach ($products as $post):
+                                    $product = wc_get_product($post->ID);
+                                    if (!$product)
+                                        continue;
+
+                                    $image_url = $product->get_image_id()
+                                        ? wp_get_attachment_image_src($product->get_image_id(), [854, 854])[0]
+                                        : 'https://via.placeholder.com/854';
+                                    ?>
+                                    <div class="swiper-slide text-center">
+                                        <div class="hassan_swiper_container">
+                                            <div class="product" data-product-id="<?php echo $product->get_id(); ?>">
+                                                <div class="hassan_swiper_top_bar">
+                                                    <p class="btn">Nauja</p>
+                                                    <div>
+                                                        <?php
+                                                        echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>">
+                                                <img src="<?php echo esc_url($image_url); ?>"
+                                                    alt="<?php echo esc_attr($product->get_name()); ?>" width="100%">
+                                                <h2 class="mt-2"><?php echo esc_html($product->get_name()); ?></h2>
+                                                <p><?php echo $product->get_price_html(); ?></p>
+                                                <button class="hassanSwiperOne_btn">Į krepšelį</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <!-- Add Arrows -->
+                            <div class="hassanSwiperOneArrows">
+                                <div class="swiper-button-prev">
+                                    <svg id="hassan_swiper_one_prev_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Previous slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M23.5 24L11.5 17.5L23.5 11" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div class="swiper-button-next">
+                                    <svg id="hassan_swiper_one_next_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Next slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M11 11L24 17.5L11 24" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Add Pagination -->
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    <?php else: ?>
+                        <p>No products found!</p>
+                    <?php endif; ?>
+                    <div class="hassanAdjutsIconWidth d-block mobile-nav desktop_none">
+                        <a href="#">Naršyti visus produktus <span><img
+                                    src="https://bisque-fly-315242.hostingersite.com/wp-content/uploads/2026/01/Vector-1.svg"
+                                    alt="right-arrow-icon" width="5" class="srcolling-right-arrow-icon"></span></a>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -621,23 +697,6 @@ $size = 'full';
             </div>
             <div class="mt-5 my-lg-5">
                 <div class="row hassanSwiperOneRow">
-                    <!-- <?php
-                    foreach (getProductMainCategories() as $cat) {
-                        if ($cat->slug == 'numatyta') {
-                            continue;
-                        }
-                        $cat_image = get_term_meta($cat->term_id, 'thumbnail_id', true);
-                        ?>
-                        <div class="col col-6 col-lg-3 mb-4">
-                            <a class="text-center" href="<?php echo get_category_link($cat->term_id); ?>">
-                                <img src="<?php echo wp_get_attachment_image_src($cat_image, array(854, 854))[0]; ?>" alt=""
-                                    width="100%">
-                                <p class="mt-4"><?php echo $cat->name; ?></p>
-                            </a>
-                        </div>
-                        <?php
-                    }
-                    ?> -->
                     <?php
                     $product_ids = array(312264, 312265, 312263, 312285, 312289);
 
@@ -804,23 +863,6 @@ $size = 'full';
             </div>
             <div class="mt-5 my-lg-5">
                 <div class="row hassanSwiperOneRow">
-                    <!-- <?php
-                    foreach (getProductMainCategories() as $cat) {
-                        if ($cat->slug == 'numatyta') {
-                            continue;
-                        }
-                        $cat_image = get_term_meta($cat->term_id, 'thumbnail_id', true);
-                        ?>
-                        <div class="col col-6 col-lg-3 mb-4">
-                            <a class="text-center" href="<?php echo get_category_link($cat->term_id); ?>">
-                                <img src="<?php echo wp_get_attachment_image_src($cat_image, array(854, 854))[0]; ?>" alt=""
-                                    width="100%">
-                                <p class="mt-4"><?php echo $cat->name; ?></p>
-                            </a>
-                        </div>
-                        <?php
-                    }
-                    ?> -->
                     <?php
                     $product_ids = array(312264, 312265, 312263, 312285, 312289);
 
