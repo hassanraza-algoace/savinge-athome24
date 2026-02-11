@@ -27,8 +27,8 @@ $logo_src = ($logo_id && wp_get_attachment_image_src($logo_id)) ? wp_get_attachm
                 <?php endif; ?>
             </div>
             <p class="footer-description">
-                Elektroninė parduotuvė, kurioje rasite platų pasirinkiną namams,
-                buičiai, remontui, sodo darbams, automobilių priežiūrai skirtų prekių.
+                Elektroninė parduotuvė, kurioje rasite platų pasirinkimą namams, buičiai, remontui, sodo darbams,
+                automobilio priežiūrai skirtų prekių.
             </p>
             <div class="footer-contact">
                 <div><a href="tel:+37060832314">+370 608 32 314</a></div>

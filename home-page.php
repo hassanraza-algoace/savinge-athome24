@@ -29,29 +29,29 @@ get_header();
                 foreach ($parent_categories as $parent_cat) {
                     ?>
 
-                        <?php
-                        $args_level_2 = array(
-                            'orderby' => 'name',
-                            'order' => 'ASC',
-                            'parent' => $parent_cat->term_id,
-                            'taxonomy' => "product_cat",
-                        );
-                        $level_2_categories = get_categories($args_level_2);
-                        foreach ($level_2_categories as $sub_category_level_2) {
+                    <?php
+                    $args_level_2 = array(
+                        'orderby' => 'name',
+                        'order' => 'ASC',
+                        'parent' => $parent_cat->term_id,
+                        'taxonomy' => "product_cat",
+                    );
+                    $level_2_categories = get_categories($args_level_2);
+                    foreach ($level_2_categories as $sub_category_level_2) {
+                        ?>
+                        <h2 class="py-4 text-uppercase d-flex justify-content-between align-items-center">
+                            <a
+                                href="<?php echo get_category_link($sub_category_level_2->term_id); ?>"><?php echo $sub_category_level_2->name; ?></a>
+                            <?php if ($level_2_categories) { ?>
+                                <img src="<?php echo wp_get_attachment_image_src(21)[0]; ?>" alt="" width="10px">
+                            <?php }
                             ?>
-                                <h2 class="py-4 text-uppercase d-flex justify-content-between align-items-center">
-                                    <a
-                                        href="<?php echo get_category_link($sub_category_level_2->term_id); ?>"><?php echo $sub_category_level_2->name; ?></a>
-                                    <?php if ($level_2_categories) { ?>
-                                            <img src="<?php echo wp_get_attachment_image_src(21)[0]; ?>" alt="" width="10px">
-                                    <?php }
-                                    ?>
-                                    <input name="current_cat" type="hidden" value="<?php echo $sub_category_level_2->term_id; ?>">
-                                </h2>
+                            <input name="current_cat" type="hidden" value="<?php echo $sub_category_level_2->term_id; ?>">
+                        </h2>
 
-                                <?php
+                        <?php
 
-                        }
+                    }
                 }
 
                 ?>
@@ -86,18 +86,35 @@ get_header();
                     $all_categories = get_categories($args);
                     foreach ($all_categories as $cat) {
                         ?>
-                            <div class="categories-content  position-absolute top-0 parent-<?php echo $cat->term_id; ?>"
-                                style="background-color: white;">
+                        <div class="categories-content  position-absolute top-0 parent-<?php echo $cat->term_id; ?>"
+                            style="background-color: white;">
 
 
-                                <div class="row">
-                                    <div class="col col-12">
-                                        <?php
+                            <div class="row">
+                                <div class="col col-12">
+                                    <?php
 
-                                        $args2 = array(
+                                    $args2 = array(
+                                        'taxonomy' => $taxonomy,
+                                        'child_of' => 0,
+                                        'parent' => $cat->term_id,
+                                        'orderby' => $orderby,
+                                        'show_count' => $show_count,
+                                        'pad_counts' => $pad_counts,
+                                        'hierarchical' => $hierarchical,
+                                        'title_li' => $title,
+                                        'hide_empty' => $empty,
+                                    );
+
+                                    $sub_cats = get_categories($args2);
+                                    echo '<div class="second-level">';
+                                    foreach ($sub_cats as $sub_category) {
+                                        echo '<div class="second-level-item"><a href="' . get_term_link($sub_category->term_id) . '">' . $sub_category->name . '</a>';
+
+                                        $args3 = array(
                                             'taxonomy' => $taxonomy,
                                             'child_of' => 0,
-                                            'parent' => $cat->term_id,
+                                            'parent' => $sub_category->term_id,
                                             'orderby' => $orderby,
                                             'show_count' => $show_count,
                                             'pad_counts' => $pad_counts,
@@ -105,39 +122,22 @@ get_header();
                                             'title_li' => $title,
                                             'hide_empty' => $empty,
                                         );
-
-                                        $sub_cats = get_categories($args2);
-                                        echo '<div class="second-level">';
-                                        foreach ($sub_cats as $sub_category) {
-                                            echo '<div class="second-level-item"><a href="' . get_term_link($sub_category->term_id) . '">' . $sub_category->name . '</a>';
-
-                                            $args3 = array(
-                                                'taxonomy' => $taxonomy,
-                                                'child_of' => 0,
-                                                'parent' => $sub_category->term_id,
-                                                'orderby' => $orderby,
-                                                'show_count' => $show_count,
-                                                'pad_counts' => $pad_counts,
-                                                'hierarchical' => $hierarchical,
-                                                'title_li' => $title,
-                                                'hide_empty' => $empty,
-                                            );
-                                            $sub_cats_2 = get_categories($args3);
-                                            if ($sub_cats_2 != null) {
-                                                echo '<div class="third-level">';
-                                                foreach ($sub_cats_2 as $sub_category_2) {
-                                                    echo '<div><a href="' . get_term_link($sub_category_2->term_id) . '">' . $sub_category_2->name . '</a></div>';
-                                                }
-                                                echo '</div>';
+                                        $sub_cats_2 = get_categories($args3);
+                                        if ($sub_cats_2 != null) {
+                                            echo '<div class="third-level">';
+                                            foreach ($sub_cats_2 as $sub_category_2) {
+                                                echo '<div><a href="' . get_term_link($sub_category_2->term_id) . '">' . $sub_category_2->name . '</a></div>';
                                             }
                                             echo '</div>';
                                         }
                                         echo '</div>';
-                                        ?>
-                                    </div>
+                                    }
+                                    echo '</div>';
+                                    ?>
                                 </div>
                             </div>
-                            <?php
+                        </div>
+                        <?php
                     }
 
                     ?>
@@ -204,9 +204,9 @@ get_header();
                                 $image_url = is_array($image_1) ? $image_1['url'] : $image_1;
                                 $image_alt = is_array($image_1) ? $image_1['alt'] : 'Image 1';
                                 ?>
-                                    <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" />
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>" />
                             <?php else: ?>
-                                    <span>ACF Image Section 1 - Large</span>
+                                <span>ACF Image Section 1 - Large</span>
                             <?php endif; ?>
                         </div>
                         <div class="bottom-images-place">
@@ -217,10 +217,10 @@ get_header();
                                     $image_url = is_array($image_2) ? $image_2['url'] : $image_2;
                                     $image_alt = is_array($image_2) ? $image_2['alt'] : 'Image 2';
                                     ?>
-                                        <img src="<?php echo esc_url($image_url); ?>"
-                                            alt="<?php echo esc_attr($image_alt); ?>" />
+                                    <img src="<?php echo esc_url($image_url); ?>"
+                                        alt="<?php echo esc_attr($image_alt); ?>" />
                                 <?php else: ?>
-                                        <span>ACF Image Section 2 - Medium</span>
+                                    <span>ACF Image Section 2 - Medium</span>
                                 <?php endif; ?>
                             </div>
 
@@ -231,10 +231,10 @@ get_header();
                                     $image_url = is_array($image_3) ? $image_3['url'] : $image_3;
                                     $image_alt = is_array($image_3) ? $image_3['alt'] : 'Image 3';
                                     ?>
-                                        <img src="<?php echo esc_url($image_url); ?>"
-                                            alt="<?php echo esc_attr($image_alt); ?>" />
+                                    <img src="<?php echo esc_url($image_url); ?>"
+                                        alt="<?php echo esc_attr($image_alt); ?>" />
                                 <?php else: ?>
-                                        <span>ACF Image Section 3 - Small</span>
+                                    <span>ACF Image Section 3 - Small</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -260,54 +260,55 @@ get_header();
                     <div class="product-right-section">
                         <?php if ($product && $product->is_type('simple')): ?>
 
-                                <?php if ($product->is_on_sale()): ?>
-                                        <div class="product-badge">
-                                            <?php
-                                            $percentage = round((($product->get_regular_price() - $product->get_sale_price()) / $product->get_regular_price()) * 100);
-                                            echo '-' . $percentage . '%';
-                                            ?>
-                                        </div>
-                                <?php endif; ?>
-
-                                <div class="add_to_wishlist product-wishlist">
+                            <?php if ($product->is_on_sale()): ?>
+                                <div class="product-badge">
                                     <?php
-                                    echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
+                                    $percentage = round((($product->get_regular_price() - $product->get_sale_price()) / $product->get_regular_price()) * 100);
+                                    echo '-' . $percentage . '%';
                                     ?>
                                 </div>
-                                <div class="product-image">
-                                    <?php echo $product->get_image('medium'); ?>
-                                    <p class="discount-text">Dienos pasiūlymas!</p>
-                                    <p class="discount-text discount-number">-50%</p>
-                                </div>
+                            <?php endif; ?>
 
-                                <div class="product-availability">
-                                    Pasiūlymas baigs galioti po:
+                            <div class="add_to_wishlist product-wishlist">
+                                <?php
+                                echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
+                                ?>
+                            </div>
+                            <div class="product-image">
+                                <?php echo $product->get_image('medium'); ?>
+                                <p class="discount-text">Dienos pasiūlymas!</p>
+                                <p class="discount-text discount-number">-50%</p>
+                            </div>
+
+                            <div class="product-availability">
+                                Pasiūlymas baigs galioti po: <span class="mob_block">
                                     <strong><?php echo get_field('offer_countdown') ? get_field('offer_countdown') : '23 VAL 99 MIN'; ?></strong>
-                                </div>
-                                <div class="product-content">
-                                    <h2 class="product-title">
-                                        <?php echo esc_html($product->get_name()); ?>
-                                    </h2>
+                                </span>
+                            </div>
+                            <div class="product-content">
+                                <h2 class="product-title">
+                                    <?php echo esc_html($product->get_name()); ?>
+                                </h2>
 
-                                    <div class="product-pricing">
-                                        <span class="product-price">
-                                            <?php echo $product->get_price_html(); ?>
-                                        </span>
-                                    </div>
-
-                                    <form class="cart" action="<?php echo esc_url($product->add_to_cart_url()); ?>"
-                                        method="post" enctype="multipart/form-data">
-                                        <button type="submit" name="add-to-cart"
-                                            value="<?php echo esc_attr($product->get_id()); ?>"
-                                            class="product-add-cart button product_type_simple add_to_cart_button ajax_add_to_cart">
-                                            Į Krepšelį
-                                        </button>
-                                    </form>
+                                <div class="product-pricing">
+                                    <span class="product-price">
+                                        <?php echo $product->get_price_html(); ?>
+                                    </span>
                                 </div>
+
+                                <form class="cart" action="<?php echo esc_url($product->add_to_cart_url()); ?>"
+                                    method="post" enctype="multipart/form-data">
+                                    <button type="submit" name="add-to-cart"
+                                        value="<?php echo esc_attr($product->get_id()); ?>"
+                                        class="product-add-cart button product_type_simple add_to_cart_button ajax_add_to_cart">
+                                        Į Krepšelį
+                                    </button>
+                                </form>
+                            </div>
                         <?php else: ?>
-                                <div class="product-not-found">
-                                    <p>Product not found. Please enter a valid SKU in ACF field 'product_sku'.</p>
-                                </div>
+                            <div class="product-not-found">
+                                <p>Product not found. Please enter a valid SKU in ACF field 'product_sku'.</p>
+                            </div>
                         <?php endif; ?>
                     </div>
 
@@ -651,67 +652,67 @@ $size = 'full';
                     ?>
 
                     <?php if (!empty($products)): ?>
-                            <!-- Swiper -->
-                            <div class="swiper hassanSwiperOne ">
-                                <div class="swiper-wrapper hassanSwiperOneContainer">
-                                    <?php foreach ($products as $post):
-                                        $product = wc_get_product($post->ID);
-                                        if (!$product)
-                                            continue;
+                        <!-- Swiper -->
+                        <div class="swiper hassanSwiperOne ">
+                            <div class="swiper-wrapper hassanSwiperOneContainer">
+                                <?php foreach ($products as $post):
+                                    $product = wc_get_product($post->ID);
+                                    if (!$product)
+                                        continue;
 
-                                        $image_url = $product->get_image_id()
-                                            ? wp_get_attachment_image_src($product->get_image_id(), [854, 854])[0]
-                                            : 'https://via.placeholder.com/854';
-                                        ?>
-                                            <div class="swiper-slide text-center">
-                                                <div class="hassan_swiper_container">
-                                                    <div class="product" data-product-id="<?php echo $product->get_id(); ?>">
-                                                        <div class="hassan_swiper_top_bar">
-                                                            <p class="btn">Nauja</p>
-                                                            <div>
-                                                                <?php
-                                                                echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
-                                                                ?>
-                                                            </div>
-                                                        </div>
+                                    $image_url = $product->get_image_id()
+                                        ? wp_get_attachment_image_src($product->get_image_id(), [854, 854])[0]
+                                        : 'https://via.placeholder.com/854';
+                                    ?>
+                                    <div class="swiper-slide text-center">
+                                        <div class="hassan_swiper_container">
+                                            <div class="product" data-product-id="<?php echo $product->get_id(); ?>">
+                                                <div class="hassan_swiper_top_bar">
+                                                    <p class="btn">Nauja</p>
+                                                    <div>
+                                                        <?php
+                                                        echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
+                                                        ?>
                                                     </div>
-                                                    <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>">
-                                                        <img src="<?php echo esc_url($image_url); ?>"
-                                                            alt="<?php echo esc_attr($product->get_name()); ?>" width="100%">
-                                                        <h2 class="mt-2"><?php echo esc_html($product->get_name()); ?></h2>
-                                                        <p><?php echo $product->get_price_html(); ?></p>
-                                                        <button class="hassanSwiperOne_btn">Į krepšelį</button>
-                                                    </a>
                                                 </div>
                                             </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <!-- Add Arrows -->
-                                <div class="hassanSwiperOneArrows">
-                                    <div class="swiper-button-prev">
-                                        <svg id="hassan_swiper_one_prev_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
-                                            height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
-                                            aria-label="Previous slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
-                                            <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
-                                            <path d="M23.5 24L11.5 17.5L23.5 11" stroke="#054C73" stroke-width="1.5"
-                                                stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
+                                            <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>">
+                                                <img src="<?php echo esc_url($image_url); ?>"
+                                                    alt="<?php echo esc_attr($product->get_name()); ?>" width="100%">
+                                                <h2 class="mt-2"><?php echo esc_html($product->get_name()); ?></h2>
+                                                <p><?php echo $product->get_price_html(); ?></p>
+                                                <button class="hassanSwiperOne_btn">Į krepšelį</button>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="swiper-button-next">
-                                        <svg id="hassan_swiper_one_next_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
-                                            height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
-                                            aria-label="Next slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
-                                            <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
-                                            <path d="M11 11L24 17.5L11 24" stroke="#054C73" stroke-width="1.5"
-                                                stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <!-- Add Pagination -->
-                                <div class="swiper-pagination"></div>
+                                <?php endforeach; ?>
                             </div>
+                            <!-- Add Arrows -->
+                            <div class="hassanSwiperOneArrows">
+                                <div class="swiper-button-prev">
+                                    <svg id="hassan_swiper_one_prev_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Previous slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M23.5 24L11.5 17.5L23.5 11" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div class="swiper-button-next">
+                                    <svg id="hassan_swiper_one_next_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Next slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M11 11L24 17.5L11 24" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Add Pagination -->
+                            <div class="swiper-pagination"></div>
+                        </div>
                     <?php else: ?>
-                            <p>No products found!</p>
+                        <p>No products found!</p>
                     <?php endif; ?>
                     <div class="hassanAdjutsIconWidth d-block mobile-nav desktop_none">
                         <a href="#">Naršyti išpardavimą <span><img
@@ -745,12 +746,12 @@ $size = 'full';
                         while (have_rows('brands_section', 5)):
                             the_row();
                             ?>
-                                    <div class="swiper-slide justify-content-center">
-                                        <a href="<?php echo get_sub_field('url'); ?>">
-                                            <img src="<?php echo get_sub_field('image'); ?>" alt="" width="100%">
-                                        </a>
-                                    </div>
-                            <?php endwhile;
+                            <div class="swiper-slide justify-content-center">
+                                <a href="<?php echo get_sub_field('url'); ?>">
+                                    <img src="<?php echo get_sub_field('image'); ?>" alt="" width="100%">
+                                </a>
+                            </div>
+                        <?php endwhile;
                     endif; ?>
                 </div>
                 <div class="hassanSwiperOneArrows">
@@ -834,67 +835,67 @@ $size = 'full';
                     ?>
 
                     <?php if (!empty($products)): ?>
-                            <!-- Swiper -->
-                            <div class="swiper hassanSwiperOne ">
-                                <div class="swiper-wrapper hassanSwiperOneContainer">
-                                    <?php foreach ($products as $post):
-                                        $product = wc_get_product($post->ID);
-                                        if (!$product)
-                                            continue;
+                        <!-- Swiper -->
+                        <div class="swiper hassanSwiperOne ">
+                            <div class="swiper-wrapper hassanSwiperOneContainer">
+                                <?php foreach ($products as $post):
+                                    $product = wc_get_product($post->ID);
+                                    if (!$product)
+                                        continue;
 
-                                        $image_url = $product->get_image_id()
-                                            ? wp_get_attachment_image_src($product->get_image_id(), [854, 854])[0]
-                                            : 'https://via.placeholder.com/854';
-                                        ?>
-                                            <div class="swiper-slide text-center">
-                                                <div class="hassan_swiper_container">
-                                                    <div class="product" data-product-id="<?php echo $product->get_id(); ?>">
-                                                        <div class="hassan_swiper_top_bar">
-                                                            <p class="btn">Nauja</p>
-                                                            <div>
-                                                                <?php
-                                                                echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
-                                                                ?>
-                                                            </div>
-                                                        </div>
+                                    $image_url = $product->get_image_id()
+                                        ? wp_get_attachment_image_src($product->get_image_id(), [854, 854])[0]
+                                        : 'https://via.placeholder.com/854';
+                                    ?>
+                                    <div class="swiper-slide text-center">
+                                        <div class="hassan_swiper_container">
+                                            <div class="product" data-product-id="<?php echo $product->get_id(); ?>">
+                                                <div class="hassan_swiper_top_bar">
+                                                    <p class="btn">Nauja</p>
+                                                    <div>
+                                                        <?php
+                                                        echo do_shortcode('[yith_wcwl_add_to_wishlist product_id="' . esc_attr($product->get_id()) . '"]');
+                                                        ?>
                                                     </div>
-                                                    <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>">
-                                                        <img src="<?php echo esc_url($image_url); ?>"
-                                                            alt="<?php echo esc_attr($product->get_name()); ?>" width="100%">
-                                                        <h2 class="mt-2"><?php echo esc_html($product->get_name()); ?></h2>
-                                                        <p><?php echo $product->get_price_html(); ?></p>
-                                                        <button class="hassanSwiperOne_btn">Į krepšelį</button>
-                                                    </a>
                                                 </div>
                                             </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <!-- Add Arrows -->
-                                <div class="hassanSwiperOneArrows">
-                                    <div class="swiper-button-prev">
-                                        <svg id="hassan_swiper_one_prev_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
-                                            height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
-                                            aria-label="Previous slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
-                                            <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
-                                            <path d="M23.5 24L11.5 17.5L23.5 11" stroke="#054C73" stroke-width="1.5"
-                                                stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
+                                            <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>">
+                                                <img src="<?php echo esc_url($image_url); ?>"
+                                                    alt="<?php echo esc_attr($product->get_name()); ?>" width="100%">
+                                                <h2 class="mt-2"><?php echo esc_html($product->get_name()); ?></h2>
+                                                <p><?php echo $product->get_price_html(); ?></p>
+                                                <button class="hassanSwiperOne_btn">Į krepšelį</button>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="swiper-button-next">
-                                        <svg id="hassan_swiper_one_next_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
-                                            height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
-                                            aria-label="Next slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
-                                            <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
-                                            <path d="M11 11L24 17.5L11 24" stroke="#054C73" stroke-width="1.5"
-                                                stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <!-- Add Pagination -->
-                                <div class="swiper-pagination"></div>
+                                <?php endforeach; ?>
                             </div>
+                            <!-- Add Arrows -->
+                            <div class="hassanSwiperOneArrows">
+                                <div class="swiper-button-prev">
+                                    <svg id="hassan_swiper_one_prev_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Previous slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M23.5 24L11.5 17.5L23.5 11" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <div class="swiper-button-next">
+                                    <svg id="hassan_swiper_one_next_arrow" xmlns="https://www.w3.org/2000/svg" width="35"
+                                        height="35" viewBox="0 0 35 35" fill="none" tabIndex="0" role="button"
+                                        aria-label="Next slide" aria-controls="swiper-wrapper-5ebd69b1b9e3a757">
+                                        <rect width="35" height="35" rx="4" fill="#D2D2D2"></rect>
+                                        <path d="M11 11L24 17.5L11 24" stroke="#054C73" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Add Pagination -->
+                            <div class="swiper-pagination"></div>
+                        </div>
                     <?php else: ?>
-                            <p>No products found!</p>
+                        <p>No products found!</p>
                     <?php endif; ?>
                     <div class="hassanAdjutsIconWidth d-block mobile-nav desktop_none">
                         <a href="#">Naršyti visus produktus <span><img
@@ -943,16 +944,16 @@ $size = 'full';
                     if ($query->have_posts()):
                         while ($query->have_posts()):
                             $query->the_post(); ?>
-                                    <div class="inner_container">
-                                        <a class="text-center" href="<?php echo get_permalink(); ?>">
-                                            <img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="" width="100%">
-                                            <h2 class="mb-3 mt-3 text-start title"><?php echo get_the_title(); ?></h2>
-                                            <p class="excerpt mb-3 text-start"><?php echo get_the_excerpt(); ?></p>
-                                            <button class="hassanBlogSection_btn">Skaityti</button>
-                                        </a>
-                                    </div>
-                                    <?php
-                                    $count_posts++;
+                            <div class="inner_container">
+                                <a class="text-center" href="<?php echo get_permalink(); ?>">
+                                    <img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="" width="100%">
+                                    <h2 class="mb-3 mt-3 text-start title"><?php echo get_the_title(); ?></h2>
+                                    <p class="excerpt mb-3 text-start"><?php echo get_the_excerpt(); ?></p>
+                                    <button class="hassanBlogSection_btn">Skaityti</button>
+                                </a>
+                            </div>
+                            <?php
+                            $count_posts++;
                         endwhile;
                     endif;
                     ?>

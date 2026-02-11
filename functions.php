@@ -2013,4 +2013,31 @@ function translate_password_strength($translated, $text, $domain)
     }
 
     return $translated;
+} 
+// functions.php me add karo
+add_filter('login_errors', 'custom_translate_login_errors_lt');
+
+function custom_translate_login_errors_lt($errors) {
+
+    // Original error messages aur Lithuanian translation
+    $translations = array(
+        'Invalid username.' => 'Neteisingas vartotojo vardas.',
+        'Invalid password.' => 'Neteisingas slaptažodis.',
+        'Lost your password?' => 'Pamiršote slaptažodį?',
+        'Username is required.' => 'Vartotojo vardas yra privalomas.',
+        'Password is required.' => 'Slaptažodis yra privalomas.',
+        'ERROR: Invalid username or password.' => 'Klaida: neteisingas vartotojo vardas arba slaptažodis.',
+        'ERROR: The password you entered for the username' => 'Klaida: slaptažodis vartotojo vardui',
+        'is incorrect.' => 'yra neteisingas.',
+        'ERROR: Your account is locked.' => 'Klaida: jūsų paskyra užblokuota.'
+    );
+
+    // Translate error messages
+    foreach ($translations as $original => $translated) {
+        if (strpos($errors, $original) !== false) {
+            $errors = str_replace($original, $translated, $errors);
+        }
+    }
+
+    return $errors;
 }
