@@ -36,7 +36,7 @@ global $product;
 ?>
 
 <div class="max-width">
-    <div class="section-padding product-section">
+    <div class="section-padding">
         <?php
         do_action('woocommerce_before_main_content');
         ?>

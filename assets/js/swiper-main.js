@@ -1,13 +1,3 @@
-// var swiper = new Swiper(".main-swiper", {
-//   loop: true,
-//   pagination: {
-//     el: ".swiper-pagination",
-//   },
-//   autoplay: {
-//     delay: 2000,
-//   },
-// });
-
 var swiperposts = new Swiper(".productPopularSwiper", {
   draggable: true,
   loop: true,
@@ -20,13 +10,23 @@ var swiperposts = new Swiper(".productPopularSwiper", {
   },
   breakpoints: {
     0: {
-      slidesPerView: 1,
+      slidesPerView: 1.5,
+      centeredSlides: true,
+      spaceBetween: 15,
     },
-    768: {
+    640: {
       slidesPerView: 2,
     },
-    992: {
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+    1440: {
       slidesPerView: 4,
+      spaceBetween: 20,
+    },
+    2560: {
+      slidesPerView: 6,
       spaceBetween: 20,
     },
   },
@@ -44,10 +44,18 @@ var swiperposts = new Swiper(".productNewSwiper", {
       slidesPerView: 1,
     },
     640: {
-      slidesPerView: 3,
+      slidesPerView: 2,
     },
-    992: {
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+    1280: {
       slidesPerView: 4,
+      spaceBetween: 20,
+    },
+    1440: {
+      slidesPerView: 5,
       spaceBetween: 20,
     },
   },
@@ -65,39 +73,58 @@ var swiperposts = new Swiper(".productRelatedSwiper", {
       slidesPerView: 1,
     },
     640: {
-      slidesPerView: 3,
+      slidesPerView: 2,
     },
-    992: {
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+    1280: {
       slidesPerView: 4,
+      spaceBetween: 20,
+    },
+    1440: {
+      slidesPerView: 5,
       spaceBetween: 20,
     },
   },
 });
 
 var swiperposts = new Swiper(".brandSwiper", {
-  draggable: true,
-  pagination: {
-    el: ".swiper-pagination",
-  },
   loop: true,
+
+
+  slidesPerGroup: 4, // 4 slides ek sath move hongi
+
   navigation: {
     nextEl: "#product-brand-swiper-button-next",
     prevEl: "#product-brand-swiper-button-prev",
   },
+
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true,
+  },
+
   breakpoints: {
     0: {
       slidesPerView: 2,
-      spaceBetween: 0,
+      slidesPerGroup: 2,
+      spaceBetween: 10,
     },
     640: {
-      slidesPerView: 3,
+      slidesPerView: 4,
+      slidesPerGroup: 4,
+      spaceBetween: 15,
     },
     992: {
       slidesPerView: 6,
+      slidesPerGroup: 4, // yahan bhi 4 scroll honge
       spaceBetween: 20,
     },
   },
 });
+
 
 var swiper = new Swiper(".productGallery", {
   pagination: {
@@ -106,8 +133,7 @@ var swiper = new Swiper(".productGallery", {
   loop: true,
 });
 var swiper = new Swiper(".hassanSwiperOne", {
-  slidesPerView: 4, // Desktop view
-  spaceBetween: 20,
+  draggable: true,
   loop: true,
   navigation: {
     nextEl: "#hassan_swiper_one_next_arrow",
@@ -118,10 +144,26 @@ var swiper = new Swiper(".hassanSwiperOne", {
     clickable: true,
   },
   breakpoints: {
-    0: { slidesPerView: 1 }, // Mobile
-    576: { slidesPerView: 2 }, // Small devices
-    768: { slidesPerView: 3 }, // Medium
-    992: { slidesPerView: 4 }, // Large
+    0: {
+      slidesPerView: 1.5,
+      centeredSlides: true,
+      spaceBetween: 15,
+    },
+    640: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+    1440: {
+      slidesPerView: 4,
+      spaceBetween: 20,
+    },
+    2560: {
+      slidesPerView: 6,
+      spaceBetween: 20,
+    },
   },
 });
 document.addEventListener("DOMContentLoaded", function () {
@@ -138,66 +180,71 @@ document.addEventListener("DOMContentLoaded", function () {
       prevEl: ".swiper-button-prev",
     },
     breakpoints: {
+      0: {
+        slidesPerView: 1,
+      },
       640: {
         slidesPerView: 2,
-        spaceBetween: 20,
-      },
-      768: {
-        slidesPerView: 3,
-        spaceBetween: 25,
       },
       1024: {
-        slidesPerView: 4,
-        spaceBetween: 30,
+        slidesPerView: 3,
+        spaceBetween: 20,
       },
       1280: {
+        slidesPerView: 4,
+        spaceBetween: 20,
+      },
+      1440: {
         slidesPerView: 5,
-        spaceBetween: 30,
+        spaceBetween: 20,
+      },
+    },
+  })
+});
+
+// Single product reviews slider
+var reviewsSwiperEl = document.querySelector(".productReviewsSwiper");
+if (reviewsSwiperEl) {
+  var reviewsSwiper = new Swiper(".productReviewsSwiper", {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: true,
+    pagination: {
+      el: ".productReviewsSwiper .swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".productReviewsSwiper .swiper-button-next",
+      prevEl: ".productReviewsSwiper .swiper-button-prev",
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 24,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 20,
+      },
+      1280: {
+        slidesPerView: 4,
+        spaceBetween: 20,
+      },
+      1440: {
+        slidesPerView: 5,
+        spaceBetween: 20,
       },
     },
   });
+}
 
-  // Single product reviews slider
-  var reviewsSwiperEl = document.querySelector(".productReviewsSwiper");
-  if (reviewsSwiperEl) {
-    var reviewsSwiper = new Swiper(".productReviewsSwiper", {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      loop: true,
-      pagination: {
-        el: ".productReviewsSwiper .swiper-pagination",
-        clickable: true,
-      },
-      navigation: {
-        nextEl: ".productReviewsSwiper .swiper-button-next",
-        prevEl: ".productReviewsSwiper .swiper-button-prev",
-      },
-      breakpoints: {
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 24,
-        },
-        1024: {
-          slidesPerView: 3,
-          spaceBetween: 30,
-        },
-      },
-    });
-  }
-
-  // Navigation links swiper - auto-looping slider without arrows or pagination
-  var navLinksSwiperEl = document.querySelector(".nav-links-swiper");
-  if (navLinksSwiperEl) {
-    var navLinksSwiper = new Swiper(".nav-links-swiper", {
-      slidesPerView: "auto",
-      spaceBetween: 0,
-      loop: true,
-      autoplay: {
-        delay: 2000,
-        disableOnInteraction: false,
-      },
-      speed: 1000,
-      allowTouchMove: false,
-    });
-  }
-});
+// Navigation links swiper - auto-looping slider without arrows or pagination
+var navLinksSwiperEl = document.querySelector(".nav-links-swiper");
+if (navLinksSwiperEl) {
+  var navLinksSwiper = new Swiper(".nav-links-swiper", {
+    slidesPerView: "auto",
+    spaceBetween: 0,
+    loop: false,
+    allowTouchMove: true,
+  });
+}

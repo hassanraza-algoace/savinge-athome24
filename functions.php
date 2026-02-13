@@ -1766,282 +1766,6 @@ function force_shop_page_template($template)
 
     return $template;
 }
-add_filter('gettext', 'translate_edit_account_content', 20, 3);
-function translate_edit_account_content($translated, $text, $domain)
-{
-
-    if ($domain !== 'woocommerce') {
-        return $translated;
-    }
-
-    switch ($text) {
-
-        // ===== Form Labels =====
-        case 'First name':
-            $translated = 'Vardas';
-            break;
-
-        case 'Last name':
-            $translated = 'Pavardė';
-            break;
-
-        case 'Display name':
-            $translated = 'Rodymo vardas';
-            break;
-
-        case 'This will be how your name will be displayed in the account section and in reviews':
-            $translated = 'Šis vardas bus rodomas palikus atsiliepimą';
-            break;
-
-        case 'Email address':
-            $translated = 'El. paštas';
-            break;
-
-        case 'Current password (leave blank to leave unchanged)':
-            $translated = 'Dabartinis slaptažodis (palikite tuščią, jei nekeisite)';
-            break;
-
-        case 'New password (leave blank to leave unchanged)':
-            $translated = 'Naujas slaptažodis (palikite tuščią, jei nekeisite)';
-            break;
-
-        case 'Confirm new password':
-            $translated = 'Patvirtinkite naują slaptažodį';
-            break;
-
-        // ===== Buttons =====
-        case 'Save changes':
-            $translated = 'Išsaugoti pakeitimus';
-            break;
-
-        // ===== Success Messages =====
-        case 'Account details changed successfully.':
-            $translated = 'Paskyros informacija sėkmingai atnaujinta.';
-            break;
-    }
-
-    return $translated;
-}
-add_filter('gettext', 'custom_fix_myaccount_texts', 20, 3);
-add_filter('woocommerce_my_account_message', 'custom_fix_myaccount_texts_message', 20);
-
-function custom_fix_myaccount_texts($translated_text, $text, $domain)
-{
-
-    if ($domain !== 'woocommerce') {
-        return $translated_text;
-    }
-
-    // ===== 1. Hello Username Line (Dynamic) =====
-    if (strpos($text, 'Hello') !== false && strpos($text, 'Log out') !== false) {
-
-        $translated_text = str_replace(
-            array('Hello', '(not', 'Log out'),
-            array('Sveiki', '(ne', 'Atsijungti'),
-            $text
-        );
-
-        return $translated_text;
-    }
-
-    // ===== 2. Sirf Logout Word =====
-    if (trim($text) === 'Log out') {
-        return 'Atsijungti';
-    }
-
-    // ===== 3. Dashboard Paragraph =====
-    if (strpos($text, 'From your account dashboard') !== false) {
-        return 'Valdymo skydelyje galite valdyti užsakymus, pridėti ar keisti adresus, keisti profilio informaciją ir daugiau.';
-    }
-
-    return $translated_text;
-}
-
-
-// ===== 4. Force Layer for HTML Output =====
-function custom_fix_myaccount_texts_message($message)
-{
-
-    $message = str_replace(
-        array('Log out', 'Hello', '(not'),
-        array('Atsijungti', 'Sveiki', '(ne'),
-        $message
-    );
-
-    return $message;
-}
-add_filter('woocommerce_account_menu_items', 'remove_downloads_tab_myaccount', 999);
-
-function remove_downloads_tab_myaccount($items)
-{
-    unset($items['downloads']);
-    return $items;
-}
-add_filter('gettext', 'custom_my_account_text', 20, 3);
-function custom_my_account_text($translated_text, $text, $domain)
-{
-
-    // ----- ADRESAS KO GLOBAL PAKRO -----
-    if ($text === 'Adresas') {
-        return 'Adresai';
-    }
-    // -----------------------------------
-
-    if ($domain === 'woocommerce') {
-
-        switch ($text) {
-
-            case 'Dashboard':
-                $translated_text = 'Valdymo skydelis';
-                break;
-
-            case 'Orders':
-                $translated_text = 'Užsakymai';
-                break;
-
-            case 'Account details':
-                $translated_text = 'Paskyros duomenys';
-                break;
-        }
-    }
-
-    return $translated_text;
-}
-
-add_filter('gettext', function ($translated, $text, $domain) {
-
-    if (strpos($text, 'Adresas') !== false) {
-        error_log('FOUND TEXT: [' . $text . '] DOMAIN: ' . $domain);
-    }
-
-    return $translated;
-
-}, 10, 3);
-
-add_filter('gettext', 'translate_orders_tab_content', 20, 3);
-function translate_orders_tab_content($translated, $text, $domain)
-{
-
-    if ($domain !== 'woocommerce') {
-        return $translated;
-    }
-
-    switch ($text) {
-
-        // ===== Orders Table =====
-        case 'Order':
-            $translated = 'Užsakymas';
-            break;
-
-        case 'Date':
-            $translated = 'Data';
-            break;
-
-        case 'Status':
-            $translated = 'Būsena';
-            break;
-
-        case 'Total':
-            $translated = 'Suma';
-            break;
-
-        case 'Actions':
-            $translated = 'Veiksmai';
-            break;
-
-        case 'View':
-            $translated = 'Peržiūrėti';
-            break;
-
-        // ===== Empty Orders Message =====
-        case 'No order has been made yet.':
-            $translated = 'Dar nepateikėte nė vieno užsakymo.';
-            break;
-
-        case 'Browse products':
-            $translated = 'Peržiūrėti produktus';
-            break;
-
-        // ===== Order Details =====
-        case 'Order details':
-            $translated = 'Užsakymo informacija';
-            break;
-
-        case 'Product':
-            $translated = 'Produktas';
-            break;
-
-        case 'Quantity':
-            $translated = 'Kiekis';
-            break;
-
-    }
-
-    return $translated;
-}
-add_filter('gettext', 'translate_password_strength', 999, 3);
-function translate_password_strength($translated, $text, $domain)
-{
-
-    switch ($text) {
-
-        // ===== Strength Labels =====
-        case 'Very weak':
-            $translated = 'Labai silpnas';
-            break;
-
-        case 'Weak':
-            $translated = 'Silpnas';
-            break;
-
-        case 'Medium':
-            $translated = 'Vidutinis';
-            break;
-
-        case 'Strong':
-            $translated = 'Stiprus';
-            break;
-
-        // ===== Hint / Message =====
-        case 'Hint: The password should be at least twelve characters long.':
-            $translated = 'Patarimas: slaptažodis turi būti bent 12 simbolių.';
-            break;
-
-        case 'Your password is too weak.':
-            $translated = 'Jūsų slaptažodis per silpnas.';
-            break;
-    }
-
-    return $translated;
-}
-// functions.php me add karo
-add_filter('login_errors', 'custom_translate_login_errors_lt');
-
-function custom_translate_login_errors_lt($errors)
-{
-
-    // Original error messages aur Lithuanian translation
-    $translations = array(
-        'Invalid username.' => 'Neteisingas vartotojo vardas.',
-        'Invalid password.' => 'Neteisingas slaptažodis.',
-        'Lost your password?' => 'Pamiršote slaptažodį?',
-        'Username is required.' => 'Vartotojo vardas yra privalomas.',
-        'Password is required.' => 'Slaptažodis yra privalomas.',
-        'ERROR: Invalid username or password.' => 'Klaida: neteisingas vartotojo vardas arba slaptažodis.',
-        'ERROR: The password you entered for the username' => 'Klaida: slaptažodis vartotojo vardui',
-        'is incorrect.' => 'yra neteisingas.',
-        'ERROR: Your account is locked.' => 'Klaida: jūsų paskyra užblokuota.'
-    );
-
-    // Translate error messages
-    foreach ($translations as $original => $translated) {
-        if (strpos($errors, $original) !== false) {
-            $errors = str_replace($original, $translated, $errors);
-        }
-    }
-
-    return $errors;
-}
 add_filter('gettext', 'translate_myaccount_address_lithuanian', 20, 3);
 function translate_myaccount_address_lithuanian($translated_text, $text, $domain)
 {
@@ -2052,7 +1776,7 @@ function translate_myaccount_address_lithuanian($translated_text, $text, $domain
 
             // Address Tab Headings
             'Addresses' => 'Adresai',
-            'Billing address' => 'Sąskaitos duomenys',
+            'Billing address' => 'Atsiskaitymo adresas',
             'Shipping address' => 'Pristatymo adresas',
 
             // Buttons
@@ -2081,7 +1805,7 @@ function translate_myaccount_address_lithuanian($translated_text, $text, $domain
                 'Adresas sėkmingai pakeistas.',
 
             'The following addresses will be used on the checkout page by default.' =>
-                'Pasirinkti adresai bus naudojami atsiskaityme'
+                'Šie adresai bus naudojami atsiskaitymo puslapyje pagal nutylėjimą.'
         );
 
         if (isset($translations[$text])) {
@@ -2091,213 +1815,126 @@ function translate_myaccount_address_lithuanian($translated_text, $text, $domain
 
     return $translated_text;
 }
-add_filter('gettext', 'translate_add_to_cart_notices_lt', 20, 3);
-function translate_add_to_cart_notices_lt($translated_text, $text, $domain)
+add_filter('the_title', 'limit_product_title_length_except_single', 10, 2);
+function limit_product_title_length_except_single($title, $post_id)
 {
 
-    if ($domain == 'woocommerce') {
-
-        $translations = array(
-
-            // Add to cart notice
-            'has been added to your cart.' =>
-                'buvo pridėtas į jūsų krepšelį.',
-
-            'View cart' => 'Peržiūrėti krepšelį',
-
-            'Continue shopping' => 'Tęsti apsipirkimą',
-
-            'Product added to cart' =>
-                'Produktas pridėtas į krepšelį',
-
-            'has been removed from your cart.' =>
-                'buvo pašalintas iš jūsų krepšelio.',
-
-            'Cart updated.' =>
-                'Krepšelis atnaujintas.',
-
-            'Undo?' =>
-                'Atšaukti?',
-
-            'Your cart is currently empty.' =>
-                'Jūsų krepšelis tuščias.'
-        );
-
-        if (isset($translations[$text])) {
-            $translated_text = $translations[$text];
-        }
+    // Sirf frontend pe apply ho
+    if (is_admin()) {
+        return $title;
     }
 
-    return $translated_text;
-}
-add_action('wp_footer', 'translate_add_to_cart_js_lt');
+    // Check karo ke post type product ho
+    if (get_post_type($post_id) === 'product') {
 
-function translate_add_to_cart_js_lt()
-{
-    ?>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        // Single product page pe apply na ho
+        if (!is_product()) {
 
-            function translateNotice() {
-
-                document.querySelectorAll('body *').forEach(function (el) {
-
-                    if (el.childNodes.length === 1 && el.innerHTML.includes('has been added to your cart')) {
-
-                        el.innerHTML = el.innerHTML.replace(
-                            'has been added to your cart',
-                            'buvo pridėtas į jūsų krepšelį'
-                        );
-
-                    }
-
-                });
-
+            // 10 letters limit
+            if (mb_strlen($title) > 40) {
+                $title = mb_substr($title, 0, 40) . '...';
             }
-
-            // Pehli dafa page load pe
-            translateNotice();
-
-            // AJAX ke baad bhi
-            var observer = new MutationObserver(function (mutations) {
-                translateNotice();
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-
-        });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'fix_removed_text_js_lt');
-
-function fix_removed_text_js_lt()
-{
-    ?>
-    <script>
-        function fixRemovedText() {
-
-            document.querySelectorAll('body *').forEach(function (el) {
-
-                if (el.innerHTML.includes('removed.')) {
-                    el.innerHTML = el.innerHTML.replace('removed.', 'pašalintas.');
-                }
-
-                if (el.innerHTML.includes(' removed')) {
-                    el.innerHTML = el.innerHTML.replace(' removed', ' pašalintas');
-                }
-
-            });
-
         }
-
-        // page load
-        fixRemovedText();
-
-        // ajax changes
-        new MutationObserver(fixRemovedText).observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    </script>
-    <?php
-}
-add_filter('the_title', 'limit_product_title_everywhere', 10, 2);
-
-function limit_product_title_everywhere($title, $id)
-{
-
-    // Sirf products ke liye
-    if (get_post_type($id) !== 'product') {
-        return $title;
-    }
-
-    // Single product page pe full title show ho
-    if (is_product()) {
-        return $title;
-    }
-
-    // Yahan aap length set karo
-    $max_length = 20;
-
-    if (strlen($title) > $max_length) {
-        return mb_substr($title, 0, $max_length) . '...';
     }
 
     return $title;
 }
-add_filter('gettext', 'translate_checkout_errors_lt', 20, 3);
-function translate_checkout_errors_lt($translated_text, $text, $domain)
+add_action('wp_enqueue_scripts', 'savinge_force_wpgis_vertical_mobile', 120);
+function savinge_force_wpgis_vertical_mobile()
 {
-
-    if ($domain == 'woocommerce') {
-
-        $translations = array(
-
-            // Required fields
-            'Billing First name is a required field.' =>
-                'Vardas yra privalomas laukelis.',
-
-            'Billing Last name is a required field.' =>
-                'Pavardė yra privalomas laukelis.',
-
-            'Billing Street address is a required field.' =>
-                'Gatvės adresas yra privalomas.',
-
-            'Billing Town / City is a required field.' =>
-                'Miestas yra privalomas.',
-
-            'Billing Phone is a required field.' =>
-                'Telefonas yra privalomas.',
-
-            'Billing Email address is a required field.' =>
-                'El. paštas yra privalomas.',
-
-            // Email
-            'Invalid billing email address' =>
-                'Neteisingas el. pašto adresas.',
-
-            // Terms
-            'Please read and accept the terms and conditions to proceed with your order.' =>
-                'Prašome perskaityti ir sutikti su taisyklėmis norint tęsti užsakymą.',
-
-            // Payment
-            'Please select a payment method.' =>
-                'Prašome pasirinkti mokėjimo būdą.',
-
-            'There are no payment methods available.' =>
-                'Nėra galimų mokėjimo būdų.',
-
-            // General checkout
-            'Please enter an address to continue.' =>
-                'Įveskite adresą norėdami tęsti.',
-
-            'Please enter a valid phone number.' =>
-                'Įveskite teisingą telefono numerį.',
-
-            'Please enter a valid postcode.' =>
-                'Įveskite teisingą pašto kodą.',
-
-            // Account
-            'An account is already registered with your email address.' =>
-                'Su šiuo el. paštu jau yra registruota paskyra.',
-
-            'Please log in.' =>
-                'Prašome prisijungti.',
-
-            // Order
-            'Error processing checkout. Please try again.' =>
-                'Klaida vykdant užsakymą. Bandykite dar kartą.'
-        );
-
-        if (isset($translations[$text])) {
-            $translated_text = $translations[$text];
-        }
-
+    if (is_admin() || !function_exists('is_product') || !is_product()) {
+        return;
     }
 
-    return $translated_text;
+    if (!wp_script_is('wpgis-front-js', 'enqueued') && !wp_script_is('wpgis-front-js', 'registered')) {
+        return;
+    }
+
+    $inline_js = <<<'JS'
+(function ($) {
+    "use strict";
+
+    if (!$.fn || !$.fn.slick || $.fn.slick.__savingeVerticalPatched) {
+        return;
+    }
+
+    var originalSlick = $.fn.slick;
+
+    $.fn.slick = function () {
+        var args = Array.prototype.slice.call(arguments);
+
+        if (this && this.hasClass && this.hasClass("wpgis-slider-nav") && args.length && typeof args[0] === "object" && args[0] !== null) {
+            var options = $.extend(true, {}, args[0]);
+            var isVerticalLayout = typeof window.object_name !== "undefined" &&
+                window.object_name.wpgis_slider_layout &&
+                window.object_name.wpgis_slider_layout !== "horizontal";
+
+            if (isVerticalLayout) {
+                options.vertical = true;
+
+                if (Array.isArray(options.responsive)) {
+                    options.responsive = options.responsive.map(function (item) {
+                        if (!item || typeof item !== "object") {
+                            return item;
+                        }
+
+                        var updatedItem = $.extend(true, {}, item);
+                        if (updatedItem.settings && typeof updatedItem.settings === "object") {
+                            updatedItem.settings.vertical = true;
+                        }
+
+                        return updatedItem;
+                    });
+                }
+            }
+
+            args[0] = options;
+        }
+
+        return originalSlick.apply(this, args);
+    };
+
+    $.fn.slick.__savingeVerticalPatched = true;
+})(jQuery);
+JS;
+
+    $fallback_js = <<<'JS'
+(function ($) {
+    "use strict";
+
+    function reforceVerticalAfterInit() {
+        var isVerticalLayout = typeof window.object_name !== "undefined" &&
+            window.object_name.wpgis_slider_layout &&
+            window.object_name.wpgis_slider_layout !== "horizontal";
+
+        if (!isVerticalLayout || !window.matchMedia("(max-width: 767px)").matches) {
+            return;
+        }
+
+        var $nav = $(".wpgis-slider-nav.slick-initialized");
+        if (!$nav.length) {
+            return;
+        }
+
+        $nav.slick("slickSetOption", "vertical", true, false);
+        $nav.slick("slickSetOption", "slidesToShow", 4, true);
+    }
+
+    $(window).on("load resize orientationchange", reforceVerticalAfterInit);
+    $(document).on("woocommerce_variation_has_changed", reforceVerticalAfterInit);
+    $(reforceVerticalAfterInit);
+})(jQuery);
+JS;
+
+    wp_add_inline_script('wpgis-front-js', $inline_js, 'before');
+    wp_add_inline_script('wpgis-front-js', $fallback_js, 'after');
+}
+add_filter('woocommerce_shop_loop_item_title', 'custom_trim_loop_title', 10);
+add_filter('woocommerce_shop_loop_item_title', 'custom_trim_loop_title', 10);
+
+function custom_trim_loop_title($title)
+{
+    // Limit to 30 words
+    $trimmed = wp_trim_words($title, 30, '...');
+    return $trimmed;
 }

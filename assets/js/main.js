@@ -1,103 +1,3 @@
-// jQuery(function($) {
-//   $('.sidebar-categories').mouseenter(function(){
-//     $('.main-swiper').hide();
-//     $('.categories-content').show();
-//   });
-
-//   $('.sidebar-categories').mouseleave(function(){
-//     $('.main-swiper').show();
-//     $('.categories-content').hide();
-//   });
-
-//     $(".moreBox").slice(0, 12).show();
-//     if ($(".blogBox:hidden").length != 0) {
-//         $("#loadMore").show();
-//     }
-//     $("#loadMore").on('click', function(e) {
-//         e.preventDefault();
-//         $(".moreBox:hidden").slice(0, 12).slideDown();
-//         if ($(".moreBox:hidden").length == 0) {
-//             $("#loadMore").removeClass('d-flex').hide();
-//         }
-//     });
-
-// });
-// document.addEventListener("DOMContentLoaded", function () {
-//   const track = document.querySelector(
-//     ".latest-products-section .products-track"
-//   );
-//   const slides = document.querySelectorAll(
-//     ".latest-products-section .product-card"
-//   );
-//   const prevBtn = document.querySelector(
-//     ".latest-products-section .slider-nav.prev"
-//   );
-//   const nextBtn = document.querySelector(
-//     ".latest-products-section .slider-nav.next"
-//   );
-//   const dots = document.querySelectorAll(".latest-products-section .dot");
-
-//   let currentIndex = 0;
-//   let slidesPerView = 4;
-
-//   function updateSlidesPerView() {
-//     if (window.innerWidth <= 480) {
-//       slidesPerView = 1;
-//     } else if (window.innerWidth <= 768) {
-//       slidesPerView = 2;
-//     } else if (window.innerWidth <= 1024) {
-//       slidesPerView = 3;
-//     } else {
-//       slidesPerView = 4;
-//     }
-//   }
-
-//   function updateSlider() {
-//     const slideWidth = slides[0].offsetWidth;
-//     const gap = 20;
-//     track.style.transform = `translateX(-${
-//       currentIndex * (slideWidth + gap)
-//     }px)`;
-
-//     dots.forEach((dot, index) => {
-//       dot.classList.toggle("active", index === currentIndex);
-//     });
-//   }
-
-//   function nextSlide() {
-//     currentIndex = (currentIndex + 1) % (slides.length - slidesPerView + 1);
-//     updateSlider();
-//   }
-
-//   function prevSlide() {
-//     currentIndex =
-//       (currentIndex - 1 + (slides.length - slidesPerView + 1)) %
-//       (slides.length - slidesPerView + 1);
-//     updateSlider();
-//   }
-
-//   nextBtn.addEventListener("click", nextSlide);
-//   prevBtn.addEventListener("click", prevSlide);
-
-//   dots.forEach((dot, index) => {
-//     dot.addEventListener("click", () => {
-//       currentIndex = index;
-//       updateSlider();
-//     });
-//   });
-
-//   window.addEventListener("resize", () => {
-//     updateSlidesPerView();
-//     updateSlider();
-//   });
-
-//   updateSlidesPerView();
-//   updateSlider();
-
-//   // Auto-slide every 5 seconds
-//   setInterval(nextSlide, 5000);
-// });
-
 let homePopulerProduct = document.querySelectorAll(
   ".home_page_populer_product .product",
 );
@@ -802,7 +702,40 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!right_col && !prodcut_con) return;
   right_col.appendChild(prodcut_con);
 });
-jQuery(document).ready(function ($) {
-  // Let WooCommerce handle form submission - no custom validation needed
-  // The createaccount checkbox is optional, not required
+document.addEventListener("DOMContentLoaded", function () {
+  const coupon = document.querySelector(".woocommerce-form-coupon");
+  const checkout_left_col = document.querySelector(".left-col");
+  if (!coupon) return;
+  checkout_left_col.appendChild(coupon);
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const slider = document.querySelector('.scrolling-bar .custom_max_width');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if(!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 2;
+    slider.scrollLeft = scrollLeft - walk;
+  });
 });

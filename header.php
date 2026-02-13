@@ -304,10 +304,14 @@ if (!isset($_GET['akcijos'])) {
 
             <!-- Navigation Menu -->
             <nav class="nav-menu">
-                <div class="nav-container">
+                <div class="nav-container custom_max_width">
                     <button class="catalog-btn" onclick="toggleDropdown()"
                         aria-label="<?php esc_attr_e('Toggle Catalog', 'savinge'); ?>">
-                        Prekių katalogas ▼
+                        Prekių katalogas <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="8"
+                                viewBox="0 0 14 8" fill="none">
+                                <path d="M0.75 0.75L6.75 6.75L12.75 0.75" stroke="white" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg></span>
                     </button>
 
                     <!-- Dropdown Menu -->
